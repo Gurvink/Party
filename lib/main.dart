@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:party/client/client.dart';
 import 'package:party/host/host.dart';
+import 'package:party/host/lobby.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +13,8 @@ void main() {
       home: ClientApp(),
     ));
   } else {
-    runApp(HostApp());
+    runApp(MaterialApp(
+      home: HostApp(),
+    ));
   }
 }

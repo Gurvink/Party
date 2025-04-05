@@ -1,63 +1,43 @@
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
+import 'package:party/host/player.dart';
+import 'package:party/models/observableList.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class Server {
-  HttpServer? _server;
-  final List<WebSocket> _clients = [];
-  bool isRunning = false;
-
-  Future<void> startServer({int port = 3000}) async {
-    if(kIsWeb) return;
-
-    _server = await HttpServer.bind(InternetAddress.anyIPv4, port);
-    print('Server draait op: ${_server?.address.address}:${_server?.port}');
-    isRunning = true;
-    _server!.listen((HttpRequest request) async {
-      if (WebSocketTransformer.isUpgradeRequest(request)){
-        WebSocket socket = await WebSocketTransformer.upgrade(request);
-        _clients.add(socket);
-        socket.listen((data) => _handleMessage(data));
-      }
-    });
-  }
+  ObservableList<Player> clients = ObservableList();
+  late HttpServer server;
   
-  void _handleMessage (String message){
-    print(message);
+  void start({int port = 3000}) async {
+    server = await HttpServer.bind(InternetAddress.anyIPv4, port);
+    
+    await for (var request in server) {
+      if(WebSocketTransformer.isUpgradeRequest(request)){
+        var socket = await WebSocketTransformer.upgrade(request);
+        Player player = Player(name: "player${clients.length}", socket: socket);
+        print("New player: ${player.name}");
+        clients.add(player);
+        socket.listen((data) {
+          player.processInput(data);
+        }).onDone(() {
+          print("Connection closed");
+          clients.remove(player);
+        });
+      }
+    }
   }
+
+
+
 }
 
 class Client {
-  WebSocket? _socket;
+  void connect() async{
+    var socket = await WebSocketChannel.connect(Uri.parse('ws://192.168.16.106:3000'));
 
-  Future<void> connect (String host) async {
-    try {
-      _socket = await WebSocket.connect('ws://$host:3000');
-    } catch (e){
-      print(e);
-    }
-  }
+    socket.stream.listen((message) {
+      print(message.toString());
+    });
 
-  void send(String message) {
-    _socket?.add(message);
-  }
-}
-
-class NetworkScanner{
-  Future<List<String>> scanNetwork(String subnet) async {
-    List<String> activeServers = [];
-    for (int i = 0; i <= 255; i++) {
-      String ip = '$subnet.$i';
-      try {
-        final result = await Process.run('ping', ['-c', '1', ip]);
-
-        if (result.exitCode == 0) {
-          activeServers.add(ip);
-        }
-      } catch (e) {
-        print('Fout bij het pingen van $ip: $e');
-      }
-    }
-    return activeServers;
+    socket.sink.add('Hallo!');
   }
 }
