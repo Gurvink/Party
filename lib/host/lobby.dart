@@ -51,7 +51,6 @@ class WaitingPlayer extends SpriteComponent with HasGameReference<GameLobby>{
       position.y = 0;
       velocity.y = 0;
     }
-
     super.update(dt);
   }
 
