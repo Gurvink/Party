@@ -1,26 +1,47 @@
-import 'dart:convert';
 import 'dart:io';
-import 'package:party/network.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'package:flutter/material.dart';
+
+const List<Color> colorOptions = [
+  Colors.red,
+  Colors.green,
+  Colors.blue,
+  Colors.orange,
+  Colors.purple,
+  Colors.teal,
+];
 
 class Player {
-  String name;
   WebSocket socket;
+  bool isHost = false;
+  late GameLogic gameLogic;
+  late Color color;
+  late String name;
 
-  Player({required this.name, required this.socket});
+  Player({required this.socket});
 
   void processInput(data){
-    var message = jsonDecode(data);
-    switch(message['type']) {
-      case DataType.Message:
-        print(message['data']);
+    switch(data['type']) {
+      case 'message':
+        print(data['data']);
         break;
-      case DataType.Username:
-        name = message['data'];
+      case 'username':
+        name = data['data'];
+        break;
+      case 'color':
+        color = colorOptions.elementAt(data['data']);
         break;
       default:
-        print('Type: ${message['type']}, Message: ${message[data]}');
-        break;
+        gameLogic.handleInput(data);
     }
   }
+  void setGameLogic(GameLogic logic){
+    gameLogic = logic;
+  }
+}
+
+
+abstract class GameLogic{
+  Map<String, dynamic> items = {};
+  void handleInput(data);
 }

@@ -3,7 +3,7 @@ import 'dart:ui';
 class ObservableList<T> {
   List<T> _list = [];
   VoidCallback? onAdd;
-  VoidCallback? onRemove;
+  void Function(T)? onRemove;
 
   List<T> get list => _list;
   get length => _list.length;
@@ -26,7 +26,7 @@ class ObservableList<T> {
   void remove(T item){
     _list.remove(item);
     if(onRemove != null){
-      onRemove!();
+      onRemove!(item);
     }
   }
 
