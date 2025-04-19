@@ -1,21 +1,36 @@
 import 'dart:async';
+import 'dart:collection';
 import 'package:flame/game.dart';
 import 'package:party/games/Monopoly/models/board.dart';
-import 'package:party/games/Monopoly/models/monopolyPlayer.dart';
 import 'package:party/games/Monopoly/models/space.dart';
 import 'package:party/games/Monopoly/models/space_data.dart';
+import 'package:party/host/player.dart';
 import 'package:party/network.dart';
 
 class monopoly extends FlameGame{
-  List<monopolyPlayer> players = [];
   List<Space> spaces = List<Space>.from(standardSpaces);
   late MonopolyBoard board = MonopolyBoard(spaces: spaces);
+  Queue<Player> players = Queue();
 
   @override
   FutureOr<void> onLoad() {
-    Server.instance.clients.forEach((e) {
-      players.add(monopolyPlayer.fromPlayer(e, 500, spaces.first));
+    Server.instance.clients.forEach((player) {
+      player.setGameLogic(MonopolyLogic(startSpace: spaces.first));
+      players.add(player);
     });
+    for(int i=0; i<spaces.length; i++){
+      var currentSpace = spaces[i];
+      if(i==0){
+        currentSpace.previous = spaces[spaces.length-1];
+      } else {
+        currentSpace.previous = spaces[i-1];
+      }
+      if(i==spaces.length-1){
+        currentSpace.next = spaces.first;
+      } else {
+        currentSpace.next = spaces[i+1];
+      }
+    }
     add(board);
     
     return super.onLoad();
@@ -39,4 +54,33 @@ class monopoly extends FlameGame{
     board.size = Vector2(tileSize * tileCount, tileSize * tileCount);
     board.onLoad();
   }
+
+  void gameFlow(Player currentPlayer){
+
+  }
+}
+
+class MonopolyLogic implements GameLogic{
+  @override
+  Map<String, dynamic> items = {};
+
+  MonopolyLogic({required startSpace}){
+    items.addAll({'money' : 1500});
+    items.addAll({'Space' : startSpace});
+  }
+
+  @override
+  void handleInput(data) {
+    switch(data['type']){
+      case '':
+    }
+  }
+}
+
+class MonopolyProcess implements InputProcess{
+  @override
+  void processInput() {
+
+  }
+
 }

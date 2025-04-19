@@ -2,7 +2,7 @@ import 'package:party/games/Monopoly/models/property.dart';
 
 import '../../../host/player.dart';
 
-enum spaceType{property, chance, community, tax, jail, police, start, station, company, parking}
+enum spaceType{property, chance, community, tax, jail, police, start, station, company, parking};
 
 class Space{
   Property? property;
@@ -13,4 +13,10 @@ class Space{
   Player? owner;
 
   Space({required this.type, this.previous, this.next, this.property, this.rent});
+
+  @override
+  String toString() {
+    String string = type.name;
+    return string;
+  }
 }

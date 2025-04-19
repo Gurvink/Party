@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:party/host/player.dart';
 import 'package:party/models/navigationService.dart';
 import 'package:party/models/observableList.dart';
@@ -47,6 +46,7 @@ class Client {
   static final Client instance = Client._constructor();
   final NavigationService _navigationService = NavigationService();
   late final socket;
+  late InputProcess inputProcess;
 
   void connect() async {
     socket = await WebSocketChannel.connect(Uri.parse('ws://192.168.16.98:3000'));
@@ -57,8 +57,14 @@ class Client {
         case('change'):
           _navigationService.navigateTo('/${json['data']}');
           break;
+          default:
+            inputProcess.processInput();
       }
     });
+  }
+
+  void setInputProcess(InputProcess process){
+    inputProcess = process;
   }
 
   void sendMessage(String type, dynamic data){
@@ -68,4 +74,8 @@ class Client {
     });
     socket.sink.add(json);
   }
+}
+
+abstract class InputProcess{
+  void processInput();
 }
