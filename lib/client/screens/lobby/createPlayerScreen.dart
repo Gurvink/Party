@@ -12,7 +12,7 @@ class CreatePlayerScreen extends StatefulWidget {
 
 class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
   final TextEditingController nameController = TextEditingController();
-  Color selectedColor = Colors.blue;
+  Color selectedColor = Colors.red;
   final NavigationService navigationService = NavigationService();
 
   final List<Color> colorOptions = [
@@ -27,7 +27,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Kies je naam en kleur')),
+      appBar: AppBar(title: Text('Kies je naam en kleur'), automaticallyImplyLeading: false,),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -40,9 +40,9 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             Text('Kies een kleur:'),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Wrap(
               spacing: 12,
               children: colorOptions.map((color) {

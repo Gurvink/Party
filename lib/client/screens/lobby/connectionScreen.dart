@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:party/network.dart';
 
-class connectionScreen extends StatelessWidget {
+class ConnectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {

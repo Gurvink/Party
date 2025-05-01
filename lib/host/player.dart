@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -37,6 +38,14 @@ class Player {
   }
   void setGameLogic(GameLogic logic){
     gameLogic = logic;
+  }
+
+  void sendMessage(String type, dynamic data){
+    var json = jsonEncode({
+      'type': type,
+      'data': data,
+    });
+    socket.add(json);
   }
 }
 

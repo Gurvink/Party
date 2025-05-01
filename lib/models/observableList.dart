@@ -30,6 +30,14 @@ class ObservableList<T> {
     }
   }
 
+  Iterable<T> where(bool Function(T) action){
+    return _list.where(action);
+  }
+
+  T firstWhere(bool Function(T) action){
+    return _list.firstWhere(action);
+  }
+
   void ClearListeners(){
     onAdd = null;
     onRemove = null;

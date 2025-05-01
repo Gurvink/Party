@@ -13,6 +13,7 @@ class Property{
   final int housesCount = 0;
   final String name;
   final String description;
+  bool inMortgage = false;
 
   Property({required this.price, required this.rent, required this.color, required this.name, required this.description, required this.housePrice, required this.mortgage});
 }

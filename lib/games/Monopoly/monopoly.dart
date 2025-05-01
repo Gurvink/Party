@@ -7,7 +7,7 @@ import 'package:party/games/Monopoly/models/space_data.dart';
 import 'package:party/host/player.dart';
 import 'package:party/network.dart';
 
-class monopoly extends FlameGame{
+class Monopoly extends FlameGame{
   List<Space> spaces = List<Space>.from(standardSpaces);
   late MonopolyBoard board = MonopolyBoard(spaces: spaces);
   Queue<Player> players = Queue();
@@ -75,12 +75,4 @@ class MonopolyLogic implements GameLogic{
       case '':
     }
   }
-}
-
-class MonopolyProcess implements InputProcess{
-  @override
-  void processInput() {
-
-  }
-
 }
