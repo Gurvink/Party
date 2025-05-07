@@ -23,7 +23,7 @@ class ClientApp extends StatelessWidget {
         '/connected':  (context) => ConnectedScreen(),
         '/createPlayer': (context) => CreatePlayerScreen(),
         '/host': (context) => HostScreen(),
-        '/Monopoly/Main': (context) => MainMonopolyScreen(),
+        '/Monopoly': (context) => MainMonopolyScreen(),
       },
     );
   }

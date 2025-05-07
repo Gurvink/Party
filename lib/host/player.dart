@@ -47,10 +47,16 @@ class Player {
     });
     socket.add(json);
   }
+
+  void changePage(String route){
+    socket.add(jsonEncode({
+      'type' : 'change',
+      'data' : route,
+    }));
+  }
 }
 
 
 abstract class GameLogic{
-  Map<String, dynamic> items = {};
   void handleInput(data);
 }

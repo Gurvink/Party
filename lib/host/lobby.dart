@@ -12,8 +12,8 @@ import 'package:party/network.dart';
 class GameLobby extends FlameGame{
   @override
   Future<void> onLoad() async {
-    Server.instance.clients.onAdd = () {
-      var client = Server.instance.clients[Server.instance.clients.length-1];
+    Server.instance.clients.onAdd = (item) {
+      var client = item;
       var cube = Cube();
       add(cube);
       if(client.isHost){
@@ -23,7 +23,12 @@ class GameLobby extends FlameGame{
       }
     };
     Server.instance.clients.onRemove = (item) {
-      var cube = item.gameLogic.items['cube']; 
+      late Cube cube;
+      if(item.isHost){
+        cube = (item.gameLogic as HostLogic).cube;
+      } else {
+        cube = (item.gameLogic as LobbyLogic).cube;
+      }
       remove(cube);
     };
 
@@ -50,24 +55,20 @@ class GameLobby extends FlameGame{
 }
 
 class HostLogic implements GameLogic {
-  @override
-  Map<String, dynamic> items = {};
+  Cube cube;
+  Player player;
 
-  HostLogic({required cube, required player}){
-    items.addAll({'cube' : cube});
-    items.addAll({'player' : player});
-  }
+  HostLogic({required this.cube, required this.player});
 
   @override
   void handleInput(data) {
+    print(data);
     switch(data['type']){
       case 'cube':
-        Cube cube = items['cube'];
-        Player player = items['player'];
         player.sendMessage('change', 'host');
         cube.setHostCube(player.color, player.name);
         break;
-      case 'starGame':
+      case 'startGame':
         var navigation = NavigationService();
         switch(data['data']){
           case 'Monopoly':
@@ -80,24 +81,18 @@ class HostLogic implements GameLogic {
 }
 
 class LobbyLogic implements GameLogic{
-  @override
-  Map<String, dynamic> items = {};
+  Player player;
+  Cube cube;
 
-  LobbyLogic({required cube, required player}){
-    items.addAll({'cube' : cube});
-    items.addAll({'player' : player});
-  }
+  LobbyLogic({required this.player, required this.cube});
 
   @override
   void handleInput(data) {
     switch(data['type']) {
       case 'jump':
-        Cube cube = items['cube'];
         cube.velocity.y = -cube.gravity * 40;
         break;
       case 'cube':
-        Cube cube = items['cube'];
-        Player player = items['player'];
         player.sendMessage('change', 'connected');
         cube.setCube(player.color, player.name);
         break;

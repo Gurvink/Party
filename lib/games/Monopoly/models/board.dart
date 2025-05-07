@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
@@ -9,7 +7,8 @@ import 'package:party/games/Monopoly/models/property.dart';
 import 'package:party/games/Monopoly/models/space.dart';
 
 class MonopolyBoard extends PositionComponent{
-  final List<Space> spaces;
+  Map<Space, RectangleComponent> tiles = {};
+  List<Space> spaces;
   double tileSize;
 
   MonopolyBoard({required this.spaces, this.tileSize = 80});
@@ -70,6 +69,8 @@ class MonopolyBoard extends PositionComponent{
         position: position + Vector2.all(4),
         anchor: Anchor.topLeft,
       );
+
+      tiles.addAll({space:spaceComponent});
 
       add(spaceComponent);
       add(text);

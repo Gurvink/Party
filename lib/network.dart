@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:party/host/player.dart';
 import 'package:party/models/navigationService.dart';
 import 'package:party/models/observableList.dart';
+import 'package:universal_html/html.dart' as html;
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
@@ -14,6 +16,7 @@ class Server {
   late HttpServer server;
   late Player host;
   late HttpServer webServer;
+  final NavigationService _navigationService = NavigationService();
 
   Server._constructor();
 
@@ -95,8 +98,8 @@ class Client {
   late InputProcess inputProcess;
 
   void connect() async {
-    var ipaddress = await getLocalIp();
-    socket = WebSocketChannel.connect(Uri.parse('ws://$ipaddress:3000'));
+    final uri = Uri.parse(html.window.location.href);
+    socket = WebSocketChannel.connect(Uri.parse('ws://${uri.host}:3000'));
 
     socket.stream.listen((message) {
       var json = jsonDecode(message);

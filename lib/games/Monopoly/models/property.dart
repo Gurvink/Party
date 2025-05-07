@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-enum colorType{brown, lightBlue, pink, orange, red, yellow, green, darkBlue, station}
+enum colorType{brown, lightBlue, pink, orange, red, yellow, green, darkBlue, station, company}
 
 class Property{
   final colorType color;
@@ -38,5 +38,7 @@ Color getColor(colorType type){
       return Color.fromARGB(255, 0, 34, 195);
     case colorType.station:
       return Colors.black54;
+    case colorType.company:
+      return Color.fromARGB(255, 62, 62, 62);
   }
 }

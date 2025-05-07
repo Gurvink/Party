@@ -2,7 +2,7 @@ import 'dart:ui';
 
 class ObservableList<T> {
   List<T> _list = [];
-  VoidCallback? onAdd;
+  void Function(T)? onAdd;
   void Function(T)? onRemove;
 
   List<T> get list => _list;
@@ -19,7 +19,7 @@ class ObservableList<T> {
   void add(T item){
     _list.add(item);
     if(onAdd != null){
-      onAdd!();
+      onAdd!(item);
     }
   }
 
@@ -36,6 +36,10 @@ class ObservableList<T> {
 
   T firstWhere(bool Function(T) action){
     return _list.firstWhere(action);
+  }
+
+  bool contains(T element){
+    return _list.contains(element);
   }
 
   void ClearListeners(){

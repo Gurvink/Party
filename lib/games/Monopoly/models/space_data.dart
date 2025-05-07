@@ -24,7 +24,7 @@ List<Space> standardSpaces = [
       type: spaceType.property,
       property: Property(
           price: 60,
-          rent: [],
+          rent: [4,20,60,180,320,450],
           color: colorType.brown,
           name: "Brink",
           description: "Het mooiste plein in het dorp",
@@ -102,7 +102,16 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-      type: spaceType.company,
+    type: spaceType.company,
+    property: Property(
+        price: 150,
+        rent: [0],
+        color: colorType.company,
+        name: 'Elektriciteitsbedrijf',
+        description: 'Het bedrijf waar iedereen stroom van krijgt',
+        housePrice: 0,
+        mortgage: 75
+      ),
   ),
   Space(
     type: spaceType.property,
@@ -259,6 +268,14 @@ List<Space> standardSpaces = [
   ),
   Space(
       type: spaceType.company,
+      property: Property(
+          price: 150,
+          rent: [0],
+          color: colorType.company,
+          name: 'Waterleiding',
+          description: 'De plek van het mooie water vandaan komt',
+          housePrice: 0,
+          mortgage: 75)
   ),
   Space(
     type: spaceType.property,
