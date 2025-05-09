@@ -72,6 +72,7 @@ class _mainMonopolyScreen extends State<MainMonopolyScreen> {
               ElevatedButton(onPressed: () {
                 card.action();
                 Client.instance.sendMessage('go', '');
+                Navigator.pop(context);
               }, child: Text('Oke'))
             ],
           );
@@ -151,12 +152,21 @@ class _mainMonopolyScreen extends State<MainMonopolyScreen> {
                     ] else if(rent) ...[
                       ElevatedButton(onPressed: (){
                         player.money -= property.rent[property.housesCount];
+                        Navigator.pop(context);
                       }, child: Text("Betaal de huur: €${property.rent[property.housesCount]}")),
                     ] else
                       ...[
                         ElevatedButton(onPressed: () {
-                          player.addProperty(property);
-                          Navigator.pop(context);
+                          if(player.addProperty(property)){
+                            Navigator.pop(context);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Niet genoeg geld'),
+                                duration: Duration(seconds: 2),
+                              )
+                            );
+                          }
                         }, child: Text('Koop het voor ${property.price}')),
                         ElevatedButton(onPressed: () {
                           Client.instance.sendMessage('go', '');
@@ -239,21 +249,25 @@ class Player{
   int money = 0;
   ObservableList<Property> properties = ObservableList();
 
-  void addProperty(Property property){
+  bool addProperty(Property property){
     if(money < property.price){
-      return;
+      return false;
     } else {
       money -= property.price;
       properties.add(property);
       Client.instance.sendMessage('buy', property.price );
+      return true;
     }
   }
 
   void buildHouse(Property property){
     var set = standardSpaces.where((e) => e.property?.color == property.color);
-    set.forEach((e) {
-
-    });
+    bool setOwned = true;
+    for (var e in set) {
+      if(!properties.contains(e.property!)){
+        setOwned = false;
+      }
+    }
   }
 }
 
@@ -272,6 +286,17 @@ class MonopolyInputs implements InputProcess {
         screen.showCard(data['data']);
       case 'showDice':
         screen.showDice();
+      case 'doNothing':
+        Client.instance.sendMessage('go', '');
+      case 'payTax':
+        var space = standardSpaces.elementAt(data['data']);
+        screen.player.money -= space.rent!;
+        Client.instance.sendMessage('go', '');
+      case 'goToJail':
+        Client.instance.sendMessage('go', '');
+      case 'start':
+        screen.player.money += 200;
+        Client.instance.sendMessage('go', '');
       case 'endTurn':
         screen.active = true;
         screen.refresh();

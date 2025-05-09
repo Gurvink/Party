@@ -85,11 +85,13 @@ class Monopoly extends FlameGame{
     if(!allReady) {
       bool ready = true;
       players.forEach((e) {
+        print((e.gameLogic as MonopolyLogic).ready);
         if (!(e.gameLogic as MonopolyLogic).ready) {
           ready = false;
         }
       });
       if(ready){
+        sleep(Duration(seconds:3));
         allReady = true;
       } else {
         return;
@@ -121,6 +123,7 @@ class Monopoly extends FlameGame{
         print('on Space ${s.type.name}');
         if (s.type == spaceType.start) {
           (currentPlayer.gameLogic as MonopolyLogic).money += 200;
+          currentPlayer.sendMessage('start', 200);
         }
         (currentPlayer.gameLogic as MonopolyLogic).space = s;
         (currentPlayer.gameLogic as MonopolyLogic).pawn.moveTo(board.tiles[s]!.position);
@@ -128,6 +131,7 @@ class Monopoly extends FlameGame{
       case GameState.resolvingTile:
         Space s = (currentPlayer.gameLogic as MonopolyLogic).space;
         if (firstTime) {
+          print('show space');
           showSpaceDetails(s);
           (currentPlayer.gameLogic as MonopolyLogic).go = false;
           firstTime = false;
@@ -138,6 +142,7 @@ class Monopoly extends FlameGame{
         }
       case GameState.endTurn:
         if(firstTime){
+          print('laatste dingen');
           currentPlayer.sendMessage('endTurn', '');
           (currentPlayer.gameLogic as MonopolyLogic).go = false;
           firstTime = false;
@@ -173,6 +178,7 @@ class Monopoly extends FlameGame{
       case spaceType.tax:
         currentPlayer.sendMessage('payTax', space.rent);
       case spaceType.jail:
+        currentPlayer.sendMessage('doNothing', '');
       case spaceType.police:
         currentPlayer.sendMessage('GoToJail', '');
       case spaceType.station:
@@ -180,7 +186,9 @@ class Monopoly extends FlameGame{
       case spaceType.company:
         currentPlayer.sendMessage('showProperty', standardSpaces.indexOf(space));
       case spaceType.parking:
+        currentPlayer.sendMessage('doNothing', '');
       case spaceType.start:
+        currentPlayer.sendMessage('doNothing', '');
       }
   }
 }
@@ -198,12 +206,16 @@ class MonopolyLogic implements GameLogic{
   void handleInput(data) {
     switch(data['type']){
       case 'go':
+        print('go');
         go = true;
       case 'buy':
+        print('buy');
         int price = data['data'];
         money -= price;
         space.owner = currentPlayer;
+        go = true;
       case 'ready':
+        print('ready');
         ready = true;
     }
   }
