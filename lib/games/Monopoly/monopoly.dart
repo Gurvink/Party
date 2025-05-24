@@ -8,9 +8,11 @@ import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:party/games/Monopoly/models/board.dart';
+import 'package:party/games/Monopoly/models/hud.dart';
 import 'package:party/games/Monopoly/models/space.dart';
 import 'package:party/games/Monopoly/models/space_data.dart';
 import 'package:party/host/player.dart';
+import 'package:party/models/navigationService.dart';
 import 'package:party/network.dart';
 
 enum GameState {waitingForRoll, movingPlayer, resolvingTile, endTurn}
@@ -29,6 +31,13 @@ class Monopoly extends FlameGame{
 
   @override
   FutureOr<void> onLoad() {
+    Server.instance.clients.ClearListeners();
+    Server.instance.clients.onRemove = (_) {
+      var navigation = NavigationService();
+      if(Server.instance.clients.length <= 0){
+        navigation.goBack();
+      }
+    };
     for(int i=0; i<spaces.length; i++){
       var currentSpace = spaces[i];
       if(i==0){
@@ -48,14 +57,15 @@ class Monopoly extends FlameGame{
       var pawn = Pawn(cube: RectangleComponent(
         paint: Paint()..color = player.color,
         anchor: Anchor.center,
+        size: Vector2.all(32),
       ));
-      player.setGameLogic(MonopolyLogic(space: spaces.first, pawn: pawn));
+      player.setGameLogic(MonopolyLogic(space: spaces.first, pawn: pawn, game: this));
       add(pawn);
       player.changePage('Monopoly');
       players.addFirst(player);
     });
+    add(HudComponent(players: players.toList()));
     currentPlayer = players.removeFirst();
-
     super.onLoad();
   }
 
@@ -111,23 +121,25 @@ class Monopoly extends FlameGame{
           print(diceRoll);
           state = GameState.movingPlayer;
           firstTime = true;
-          currentPlayer.sendMessage('removeScreen', '');
         }
       case GameState.movingPlayer:
+        Space space = (currentPlayer.gameLogic as MonopolyLogic).space;
+        final gotoVector = board.tiles[space]!.rectangleComponent.center;
+        print(gotoVector);
+        (currentPlayer.gameLogic as MonopolyLogic).pawn.moveTo(gotoVector);
         if (diceRoll == 0) {
           state = GameState.resolvingTile;
           return;
         }
+        //sleep(Duration(seconds: 1));
         diceRoll--;
-        Space s = (currentPlayer.gameLogic as MonopolyLogic).space.next!;
+        Space s = (currentPlayer.gameLogic as MonopolyLogic).space.next;
         print('on Space ${s.type.name}');
-        if (s.type == spaceType.start) {
+        if (s.type == SpaceType.start) {
           (currentPlayer.gameLogic as MonopolyLogic).money += 200;
           currentPlayer.sendMessage('start', 200);
         }
         (currentPlayer.gameLogic as MonopolyLogic).space = s;
-        (currentPlayer.gameLogic as MonopolyLogic).pawn.moveTo(board.tiles[s]!.position);
-        sleep(Duration(seconds: 1));
       case GameState.resolvingTile:
         Space s = (currentPlayer.gameLogic as MonopolyLogic).space;
         if (firstTime) {
@@ -142,13 +154,11 @@ class Monopoly extends FlameGame{
         }
       case GameState.endTurn:
         if(firstTime){
-          print('laatste dingen');
           currentPlayer.sendMessage('endTurn', '');
           (currentPlayer.gameLogic as MonopolyLogic).go = false;
           firstTime = false;
         }
         if ((currentPlayer.gameLogic as MonopolyLogic).go) {
-          print('${currentPlayer.name} is klaar ');
           players.addLast(currentPlayer);
           currentPlayer = players.removeFirst();
           state = GameState.waitingForRoll;
@@ -165,29 +175,29 @@ class Monopoly extends FlameGame{
 
   void showSpaceDetails(Space space){
     switch(space.type) {
-      case spaceType.property:
+      case SpaceType.property:
         if(space.owner == null) {
           currentPlayer.sendMessage('showProperty', standardSpaces.indexOf(space));
         } else {
           currentPlayer.sendMessage('showRent', standardSpaces.indexOf(space));
         }
-      case spaceType.chance:
+      case SpaceType.chance:
         currentPlayer.sendMessage('showCard', 'chance');
-      case spaceType.community:
+      case SpaceType.community:
         currentPlayer.sendMessage('showCard', 'Community');
-      case spaceType.tax:
+      case SpaceType.tax:
         currentPlayer.sendMessage('payTax', space.rent);
-      case spaceType.jail:
+      case SpaceType.jail:
         currentPlayer.sendMessage('doNothing', '');
-      case spaceType.police:
+      case SpaceType.police:
         currentPlayer.sendMessage('GoToJail', '');
-      case spaceType.station:
+      case SpaceType.station:
         currentPlayer.sendMessage('showProperty', standardSpaces.indexOf(space));
-      case spaceType.company:
+      case SpaceType.company:
         currentPlayer.sendMessage('showProperty', standardSpaces.indexOf(space));
-      case spaceType.parking:
+      case SpaceType.parking:
         currentPlayer.sendMessage('doNothing', '');
-      case spaceType.start:
+      case SpaceType.start:
         currentPlayer.sendMessage('doNothing', '');
       }
   }
@@ -199,20 +209,20 @@ class MonopolyLogic implements GameLogic{
   bool go = false;
   bool ready = false;
   Pawn pawn;
+  Monopoly game;
 
-  MonopolyLogic({required this.space, required this.pawn});
+  MonopolyLogic({required this.space, required this.pawn, required this.game});
 
   @override
   void handleInput(data) {
     switch(data['type']){
       case 'go':
-        print('go');
         go = true;
       case 'buy':
-        print('buy');
         int price = data['data'];
         money -= price;
         space.owner = currentPlayer;
+        game.board.tiles[space]!.addOwner(currentPlayer, space);
         go = true;
       case 'ready':
         print('ready');
@@ -232,13 +242,14 @@ class Pawn extends PositionComponent {
     size = Vector2.all(16);
     anchor = Anchor.center;
     position = Vector2(32,32);
+    add(cube);
   }
 
   void moveTo(Vector2 target) {
     add(
         MoveEffect.to(
           target,
-          EffectController(duration: 0.5, curve: Curves.easeInOut),
+          EffectController(duration: 1, curve: Curves.easeInOut),
         )
     );
   }

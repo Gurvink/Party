@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class Card {
   String Text;
   void Function() action;

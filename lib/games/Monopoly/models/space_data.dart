@@ -3,10 +3,10 @@ import 'package:party/games/Monopoly/models/space.dart';
 
 List<Space> standardSpaces = [
   Space(
-      type: spaceType.start,
+      type: SpaceType.start,
   ),
   Space(
-      type: spaceType.property,
+      type: SpaceType.property,
       property: Property(
         price: 60,
         rent: [2, 10, 30, 90, 160, 250],
@@ -18,10 +18,10 @@ List<Space> standardSpaces = [
       )
   ),
   Space(
-      type: spaceType.community,
+      type: SpaceType.community,
   ),
   Space(
-      type: spaceType.property,
+      type: SpaceType.property,
       property: Property(
           price: 60,
           rent: [4,20,60,180,320,450],
@@ -33,11 +33,11 @@ List<Space> standardSpaces = [
       )
   ),
   Space(
-      type: spaceType.tax,
+      type: SpaceType.tax,
       rent: 200,
   ),
   Space(
-      type: spaceType.station,
+      type: SpaceType.station,
       property: Property(
           price: 200,
           rent: [25,50,100,200],
@@ -48,7 +48,7 @@ List<Space> standardSpaces = [
           mortgage: 100),
   ),
   Space(
-      type: spaceType.property,
+      type: SpaceType.property,
       property: Property(
           price: 100,
           rent: [6,30,90,270,400,550],
@@ -60,10 +60,10 @@ List<Space> standardSpaces = [
       ),
   ),
   Space(
-      type: spaceType.chance
+      type: SpaceType.chance
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 100,
         rent: [6,30,90,270,400,550],
@@ -75,7 +75,7 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 100,
         rent: [8,40,100,300,450,600],
@@ -87,10 +87,10 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-      type: spaceType.jail,
+      type: SpaceType.jail,
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 140,
         rent: [10,50,150,450,625,750],
@@ -102,7 +102,7 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-    type: spaceType.company,
+    type: SpaceType.company,
     property: Property(
         price: 150,
         rent: [0],
@@ -114,7 +114,7 @@ List<Space> standardSpaces = [
       ),
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 140,
         rent: [10,50,150,450,625,750],
@@ -126,7 +126,7 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 160,
         rent: [12,60,180,500,700,900],
@@ -138,7 +138,7 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-    type: spaceType.station,
+    type: SpaceType.station,
     property: Property(
         price: 200,
         rent: [25,50,100,200],
@@ -150,7 +150,7 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 180,
         rent: [14,70,200,550,750,950],
@@ -162,10 +162,10 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-      type: spaceType.community,
+      type: SpaceType.community,
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 180,
         rent: [14,70,200,550,750,950],
@@ -177,7 +177,7 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 200,
         rent: [14,70,200,550,750,950],
@@ -189,10 +189,10 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-      type: spaceType.parking,
+      type: SpaceType.parking,
   ),
   Space(
-      type: spaceType.property,
+      type: SpaceType.property,
     property: Property(
         price: 220,
         rent: [18,90,250,700,875,1050],
@@ -204,10 +204,10 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-      type: spaceType.chance,
+      type: SpaceType.chance,
   ),
   Space(
-      type: spaceType.property,
+      type: SpaceType.property,
       property: Property(
         price: 220,
         rent: [18,90,250,700,875,1050],
@@ -219,7 +219,7 @@ List<Space> standardSpaces = [
       ),
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 240,
         rent: [20,100,300,750,925,1100],
@@ -231,7 +231,7 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-    type: spaceType.station,
+    type: SpaceType.station,
     property: Property(
         price: 200,
         rent: [25,50,100,200],
@@ -243,7 +243,7 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-      type: spaceType.property,
+      type: SpaceType.property,
       property: Property(
         price: 260,
         rent: [22,110,330,800,975,1150],
@@ -255,7 +255,7 @@ List<Space> standardSpaces = [
       ),
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 260,
         rent: [22,110,330,800,975,1150],
@@ -267,7 +267,7 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-      type: spaceType.company,
+      type: SpaceType.company,
       property: Property(
           price: 150,
           rent: [0],
@@ -278,7 +278,7 @@ List<Space> standardSpaces = [
           mortgage: 75)
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 280,
         rent: [24,120,360,850,1025,1200],
@@ -290,10 +290,10 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-      type: spaceType.police,
+      type: SpaceType.police,
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 300,
         rent: [26,130,390,900,1100,1275],
@@ -305,7 +305,7 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 300,
         rent: [26,130,390,900,1100,1275],
@@ -317,10 +317,10 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-      type: spaceType.community,
+      type: SpaceType.community,
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 320,
         rent: [28,150,450,1000,1200,1400],
@@ -332,7 +332,7 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-    type: spaceType.station,
+    type: SpaceType.station,
     property: Property(
         price: 200,
         rent: [25,50,100,200],
@@ -344,10 +344,10 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-      type: spaceType.chance,
+      type: SpaceType.chance,
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
         price: 350,
         rent: [35,175,500,1100,1300,1500],
@@ -359,11 +359,11 @@ List<Space> standardSpaces = [
     ),
   ),
   Space(
-      type: spaceType.tax,
+      type: SpaceType.tax,
       rent: 100
   ),
   Space(
-    type: spaceType.property,
+    type: SpaceType.property,
     property: Property(
       price: 400,
       rent: [50,200,600,1400,1700,2000],
